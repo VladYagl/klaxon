@@ -88,7 +88,7 @@ class JsonObjectConverter(private val klaxon: Klaxon, private val allPaths: Hash
                         parameterMap.entries.map { it.key.name.toString() + ": " + it.value.toString() })
                 null
             }
-        } ?: concreteClass.objectInstance ?: throw KlaxonException(errorMessage.joinToString("\n"))
+        } ?: concreteClass.objectInstance
 
         // Now that we have an initialized object, find all the other non constructor properties
         // and if we have a value from JSON for them, initialize them as well. @@@
@@ -114,7 +114,8 @@ class JsonObjectConverter(private val klaxon: Klaxon, private val allPaths: Hash
             }
         }
 
-        return result ?: throw KlaxonException(
+        return result ?: if (errorMessage.any()) throw KlaxonException(errorMessage.joinToString("\n"))
+        else throw KlaxonException(
                 "Couldn't find a suitable constructor for class ${kc.simpleName} to initialize with $map")
     }
 
