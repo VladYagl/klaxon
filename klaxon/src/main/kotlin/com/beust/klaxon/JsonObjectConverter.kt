@@ -88,11 +88,7 @@ class JsonObjectConverter(private val klaxon: Klaxon, private val allPaths: Hash
                         parameterMap.entries.map { it.key.name.toString() + ": " + it.value.toString() })
                 null
             }
-        } ?: concreteClass.objectInstance
-
-        if (errorMessage.any()) {
-            throw KlaxonException(errorMessage.joinToString("\n"))
-        }
+        } ?: concreteClass.objectInstance ?: throw KlaxonException(errorMessage.joinToString("\n"))
 
         // Now that we have an initialized object, find all the other non constructor properties
         // and if we have a value from JSON for them, initialize them as well. @@@
